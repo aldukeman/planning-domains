@@ -17,21 +17,13 @@
     o - odd_block
     p - even_block
 
-  	(:private a1
   		a1 - odd_agent
-  	)
 
-  	(:private a2
   		a2 - even_agent
-  	)
 
-  	(:private a3
   		a3 - odd_agent
-  	)
 
-  	(:private a4
   		a4 - even_agent
-  	)
   )
 
   (:init

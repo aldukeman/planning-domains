@@ -1,4 +1,4 @@
-(define (problem BLOCKS-11-4-0) (:domain even_odd_blocks)
+(define (problem BLOCKS-11-4-1) (:domain even_odd_blocks)
   (:objects
   	a - odd_block
   	b - even_block
@@ -12,21 +12,13 @@
   	j - even_block
     k - odd_block
   
-  	(:private a1
   		a1 - odd_agent
-  	)
   
-  	(:private a2
   		a2 - even_agent
-  	)
   
-  	(:private a3
   		a3 - odd_agent
-  	)
   
-  	(:private a4
   		a4 - even_agent
-  	)
   )
 
   (:init
@@ -34,34 +26,35 @@
   	(handempty a2)
   	(handempty a3)
   	(handempty a4)
-  	(clear b)
   	(clear j)
-  	(clear c)
+  	(clear f)
+  	(clear d)
+  	(clear g)
   	(ontable i)
-  	(ontable d)
-  	(ontable e)
-  	(on b g)
-  	(on g h)
-  	(on h k)
-  	(on k a)
-  	(on a f)
-  	(on f i)
-  	(on j d)
-  	(on c e)
+  	(ontable k)
+  	(ontable h)
+  	(ontable a)
+  	(on j i)
+  	(on f e)
+  	(on e k)
+  	(on d c)
+  	(on c h)
+  	(on g b)
+  	(on b a)
   )
 
   (:goal
   	(and
-  		(on a j)
-  		(on j d)
-  		(on d b)
-  		(on b h)
-  		(on h k)
-  		(on k i)
-  		(on i f)
-  		(on f e)
-  		(on e g)
-  		(on g c)
+  		(on b d)
+  		(on d j)
+  		(on j k)
+  		(on k h)
+  		(on h a)
+  		(on a c)
+  		(on c f)
+  		(on f g)
+  		(on g i)
+  		(on i e)
   	)
   )
 )

@@ -1,5 +1,5 @@
 (define (domain even_odd_blocks)
-  (:requirements :typing :multi-agent :unfactored-privacy)
+  (:requirements :typing)
 
   (:types
     agent block - object
@@ -11,16 +11,13 @@
     (on ?x - block ?y - block)
     (ontable ?x - block)
     (clear ?x - block)
-  
-    (:private ?agent - agent
-      (holding ?agent - agent ?x - block)
-      (handempty ?agent - agent)
-    )
+    (holding ?a - agent ?x - block)
+    (handempty ?a - agent)
   )
 
   (:action pick-up-even
-    :agent ?a - even_agent
-    :parameters (?x - even_block)
+    :duration 1
+    :parameters (?a - even_agent ?x - even_block)
     :precondition (and
       (clear ?x)
       (ontable ?x)
@@ -35,8 +32,8 @@
   )
   
   (:action pick-up-odd
-    :agent ?a - odd_agent
-    :parameters (?x - odd_block)
+    :duration 1
+    :parameters (?a - odd_agent ?x - odd_block)
     :precondition (and
       (clear ?x)
       (ontable ?x)
@@ -51,10 +48,11 @@
   )
   
   (:action put-down
-    :agent ?a - agent
-    :parameters (?x - block)
-    :precondition 
+    :duration 1
+    :parameters (?a - agent ?x - block)
+    :precondition  (and
       (holding ?a ?x)
+    )
     :effect (and
       (not (holding ?a ?x))
       (clear ?x)
@@ -64,8 +62,8 @@
   )
   
   (:action stack
-    :agent ?a - agent
-    :parameters (?x - block ?y - block)
+    :duration 1
+    :parameters (?a - agent ?x - block ?y - block)
     :precondition (and
       (holding ?a ?x)
       (clear ?y)
@@ -80,8 +78,8 @@
   )
   
   (:action unstack-even
-    :agent ?a - even_agent
-    :parameters (?x - even_block ?y - block)
+    :duration 1
+    :parameters (?a - even_agent ?x - even_block ?y - block)
     :precondition (and
       (on ?x ?y)
       (clear ?x)
@@ -97,8 +95,8 @@
   )
   
   (:action unstack-odd
-    :agent ?a - odd_agent
-    :parameters (?x - odd_block ?y - block)
+    :duration 1
+    :parameters (?a - odd_agent ?x - odd_block ?y - block)
     :precondition (and
       (on ?x ?y)
       (clear ?x)

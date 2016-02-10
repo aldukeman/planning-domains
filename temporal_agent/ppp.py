@@ -769,11 +769,11 @@ class PlanningProblem(object):
     to_write += "(:init\n"
     for predicate in self.init:
       to_write += "\t{}\n".format(predicate)
-    for agent in self.objects.get("agent"):
-      to_write += "\t(free {})\n".format(agent)
-#    for agent in self.objects.get("even_agent"):
-#      to_write += "\t(free {})\n".format(agent)
-#    for agent in self.objects.get("odd_agent"):
+    for obj_type in self.types.get("agent"):
+      if obj_type is not None and self.objects.get(obj_type) is not None:
+        for agent in self.objects.get(obj_type):
+          to_write += "\t(free {})\n".format(agent)
+#    for agent in self.objects.get("agent"):
 #      to_write += "\t(free {})\n".format(agent)
     for agent in self.capabilities:
       for action in self.capabilities.get(agent):

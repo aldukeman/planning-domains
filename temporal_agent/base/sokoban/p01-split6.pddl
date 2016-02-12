@@ -334,5 +334,4 @@
   (:goal (and
     (at-goal stone-06)
   ))
-  (:metric minimize (total-time))
 )

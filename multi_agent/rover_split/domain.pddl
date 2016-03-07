@@ -17,7 +17,6 @@
     (full ?s - store)
     (calibrated ?c - camera ?r - rover)
     (supports ?c - camera ?m - mode)
-    (available ?r - rover)
     (visible ?w - waypoint ?p - waypoint)
     (have_image ?r - rover ?o - objective ?m - mode)
     (communicated_soil_data ?w - waypoint)
@@ -35,11 +34,10 @@
   )
   (:durative-action navigate
     :parameters (?x - rover ?y - waypoint ?z - waypoint)
-    :duration (= ?duration 1)
+    :duration (= ?duration 10)
     :condition
       (and
         (at start (can_traverse ?x ?y ?z))
-        (over all (available ?x))
         (at start (at ?x ?y))
         (at start (visible ?y ?z))
       )
@@ -89,7 +87,7 @@
   )
   (:durative-action drop
     :parameters (?x - rover ?y - store)
-    :duration (= ?duration 1)
+    :duration (= ?duration 0.1)
     :condition
       (and
         (at start (store_of ?y ?x))
@@ -120,7 +118,7 @@
   )
   (:durative-action take_image
     :parameters (?r - rover ?p - waypoint ?o - objective ?i - camera ?m - mode)
-    :duration (= ?duration 1)
+    :duration (= ?duration 0.1)
     :condition
       (and
         (over all (calibrated ?i ?r))
@@ -138,65 +136,56 @@
   )
   (:durative-action communicate_soil_data
     :parameters (?r - rover ?l - lander ?p - waypoint ?x - waypoint ?y - waypoint)
-    :duration (= ?duration 1)
+    :duration (= ?duration 0.5)
     :condition
       (and
         (over all (at ?r ?x))
-        (over all (at_lander ?l ?y))
+        (at start (at_lander ?l ?y))
         (at start (have_soil_analysis ?r ?p))
         (at start (visible ?x ?y))
-        (at start (available ?r))
         (at start (channel_free ?l))
       )
     :effect
       (and
-        (at start (not (available ?r)))
         (at start (not (channel_free ?l)))
         (at end (channel_free ?l))
         (at end (communicated_soil_data ?p))
-        (at end (available ?r))
       )
   )
   (:durative-action communicate_rock_data
     :parameters (?r - rover ?l - lander ?p - waypoint ?x - waypoint ?y - waypoint)
-    :duration (= ?duration 1)
+    :duration (= ?duration 0.5)
     :condition
       (and
         (over all (at ?r ?x))
         (at start (at_lander ?l ?y))
         (at start (have_rock_analysis ?r ?p))
         (at start (visible ?x ?y))
-        (at start (available ?r))
         (at start (channel_free ?l))
       )
     :effect
       (and
-        (at start (not (available ?r)))
         (at start (not (channel_free ?l)))
         (at end (channel_free ?l))
         (at end (communicated_rock_data ?p))
-        (at end (available ?r))
       )
   )
   (:durative-action communicate_image_data
     :parameters (?r - rover ?l - lander ?o - objective ?m - mode ?x - waypoint ?y - waypoint)
-    :duration (= ?duration 1)
+    :duration (= ?duration 0.5)
     :condition
       (and
         (over all (at ?r ?x))
         (over all (at_lander ?l ?y))
         (at start (have_image ?r ?o ?m))
         (at start (visible ?x ?y))
-        (at start (available ?r))
         (at start (channel_free ?l))
       )
     :effect
       (and
-        (at start (not (available ?r)))
         (at start (not (channel_free ?l)))
         (at end (channel_free ?l))
         (at end (communicated_image_data ?o ?m))
-        (at end (available ?r))
       )
   )
 )

@@ -37,9 +37,9 @@
     :duration (= ?duration 10)
     :condition
       (and
-        (at start (can_traverse ?x ?y ?z))
+        (over all (can_traverse ?x ?y ?z))
         (at start (at ?x ?y))
-        (at start (visible ?y ?z))
+        (over all (visible ?y ?z))
       )
     :effect
       (and
@@ -54,16 +54,16 @@
       (and
         (over all (at ?x ?p))
         (at start (at_soil_sample ?p))
-        (at start (equipped_for_soil_analysis ?x))
-        (at start (store_of ?s ?x))
+        (over all (equipped_for_soil_analysis ?x))
+        (over all (store_of ?s ?x))
         (at start (empty ?s))
       )
     :effect
       (and
         (at start (not (empty ?s)))
+        (at start (not (at_soil_sample ?p)))
         (at end (full ?s))
         (at end (have_soil_analysis ?x ?p))
-        (at start (not (at_soil_sample ?p)))
       )
   )
   (:durative-action sample_rock

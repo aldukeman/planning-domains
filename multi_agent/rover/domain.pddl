@@ -104,10 +104,10 @@
     :duration (= ?duration 1)
     :condition
       (and
-        (at start (equipped_for_imaging ?r))
-        (at start (calibration_target ?i ?t))
+        (over all (equipped_for_imaging ?r))
+        (over all (calibration_target ?i ?t))
         (over all (at ?r ?w))
-        (at start (visible_from ?t ?w))
+        (over all (visible_from ?t ?w))
         (over all (on_board ?i ?r))
       )
     :effect

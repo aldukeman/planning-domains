@@ -1,4 +1,4 @@
-(define (domain Rover)
+(define (domain rover)
   (:requirements :typing)
   (:types agent waypoint store camera mode lander objective - object
           rover - agent)

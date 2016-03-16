@@ -9,14 +9,17 @@
   <task     id="3"  name="rock"     services="3:2" utility="10" length="10" deadline="20" discovered="1" arrival="1" resources="" discoveredUponCompletion="" prereqs=""/>
   <task     id="4"  name="low_res"  services="4:2" utility="10" length="10" deadline="20" discovered="1" arrival="1" resources="" discoveredUponCompletion="" prereqs=""/>
   <task     id="5"  name="color"    services="5:2" utility="10" length="10" deadline="20" discovered="1" arrival="1" resources="" discoveredUponCompletion="" prereqs=""/>
-  <robot    id="1"  minresources="" maxresources="" services="2,4"/>
-  <robot    id="2"  minresources="" maxresources="" services="4"/>
-  <robot    id="3"  minresources="" maxresources="" services="2,4"/>
+  <robot    id="1"  minresources="" maxresources="" services="1,4"/>
+  <robot    id="2"  minresources="" maxresources="" services="1,2,3,4,5"/>
+  <robot    id="3"  minresources="" maxresources="" services="2,3,4"/>
   <robot    id="4"  minresources="" maxresources="" services="2"/>
-  <robot    id="5"  minresources="" maxresources="" services="2,5"/>
-  <robot    id="6"  minresources="" maxresources="" services="2,4,5"/>
-  <robot    id="7"  minresources="" maxresources="" services="3,5"/>
-  <robot    id="8"  minresources="" maxresources="" services="2,3"/>
-  <robot    id="9"  minresources="" maxresources="" services="1"/>
-  <robot    id="10" minresources="" maxresources="" services="2"/>
+  <robot    id="5"  minresources="" maxresources="" services="3,4,5"/>
+  <robot    id="6"  minresources="" maxresources="" services="2"/>
+  <robot    id="7"  minresources="" maxresources="" services="1,2,4"/>
+  <robot    id="8"  minresources="" maxresources="" services="2"/>
+  <robot    id="9"  minresources="" maxresources="" services="3"/>
+  <robot    id="10" minresources="" maxresources="" services="1,2,3,4"/>
+  <robot    id="11" minresources="" maxresources="" services="4"/>
+  <robot    id="12" minresources="" maxresources="" services="2"/>
+  <robot    id="13" minresources="" maxresources="" services="1,2,3,4,5"/>
 </problem>

@@ -6701,6 +6701,5 @@
 	(visible_from objective54 waypoint68)
 )
 
-(:goal (and)
-)
+(:goal (and))
 )

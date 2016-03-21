@@ -125,7 +125,7 @@
         (over all (on_board ?i ?r))
         (over all (equipped_for_imaging ?r))
         (over all (supports ?i ?m))
-        (at start (visible_from ?o ?p))
+        (over all (visible_from ?o ?p))
         (over all (at ?r ?p))
       )
     :effect

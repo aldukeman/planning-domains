@@ -6,86 +6,115 @@
           person cargo - loaded
           small_aircraft large_aircraft - aircraft
           small_city large_city - city)
-  
+
   (:predicates  (at ?l - locatable ?c - city)
                 (in ?p - loaded ?a - aircraft)
-                (fuel-level ?a - aircraft ?n - fuel-amount)
+                (fuel_level ?a - aircraft ?n - fuel-amount)
                 (next ?n1 ?n2 - fuel-amount))
   
-  (:functions   (total-cost) - number
-                (fuel-level ?a - aircraft) - number
-                (max-fuel-level ?a - aircraft) - number
-                (fly-time ?c1 - city ?c2 - city) - number
-                (fly-fuel-cost ?c1 - city ?c2 - city) - number
-                (zoom-time ?c1 - city ?c2 - city) - number
-                (zoom-fuel-cost ?c1 - city ?c2 - city) - number
-                (num-cargo ?a - aircraft) - number
-                (max-cargo ?a - aircraft) - number
-                (num-passengers ?a - aircraft) -number
-                (max-passengers ?a - aircraft) - number)
-                
+  (:functions   (zoom_time_factor) - number
+                (zoom_fuel_factor) - number
+                (fuel_cost) - number
+                (fuel_level ?a - aircraft) - number
+                (max_fuel_level ?a - aircraft) - number
+                (fly_time ?c1 - city ?c2 - city) - number
+                (fly_fuel_cost ?c1 - city ?c2 - city) - number
+                (zoom_time ?c1 - city ?c2 - city) - number
+                (zoom_fuel_cost ?c1 - city ?c2 - city) - number
+                (num_cargo ?a - aircraft) - number
+                (max_cargo ?a - aircraft) - number
+                (num_passengers ?a - aircraft) - number
+                (max_passengers ?a - aircraft) - number)
+
   (:durative-action board
     :parameters (?p - person ?a - aircraft ?c - city)
-    :duration   (= ?duration 1)
+    :duration   (= ?duration 0.5)
     :condition  (and  (at start (at ?p ?c))
                       (over all (at ?a ?c))
-                      (at start (< (num-passengers ?a) (max-passengers ?a))))
+                      (at start (< (num_passengers ?a) (max_passengers ?a))))
     :effect     (and  (at start (not (at ?p ?c)))
                       (at end (in ?p ?a))
-                      (at start (increase (num-passengers ?a) 1)))
-  )
-
-  (:durative-action refuel
-    :parameters (?a - aircraft ?c - city)
-    :duration   (>= ?duration 0)
-    :condition  (and  (over all (at ?a ?c))
-                      (over all (<= (fuel-level ?a) (max-fuel-level ?a))))
-    :effect     (and  (increase (fuel-level ?a) #t))
+                      (at start (increase (num_passengers ?a) 1)))
   )
 
   (:durative-action debark
     :parameters (?p - person ?a - aircraft ?c - city)
-    :duration   (= ?duration 1)
+    :duration   (= ?duration 0.5)
     :condition  (and  (at start (in ?p ?a))
                       (over all (at ?a ?c)))
     :effect     (and  (at start (not (in ?p ?a)))
                       (at end (at ?p ?c))
-                      (at end (decrease (num-passengers ?a) 1)))
+                      (at end (decrease (num_passengers ?a) 1)))
   )
-  
-  (:durative-action fly 
-    :parameters (?a - aircraft ?c1 ?c2 - city)
-    :duration   (= ?duration (fly-time ?c1 ?c2))
-    :condition  (and  (at start (at ?a ?c1))
-                      (over all (> (fuel-level ?a) (fly-fuel-cost ?c1 ?c2))))
-    :effect     (and  (at start (not (at ?a ?c1)))
-                      (at end (at ?a ?c2))
-                      (at end (decrease (fuel-level ?a) (fly-fuel-cost ?c1 ?c2))))
-                      ;(decrease (fuel-level ?a) (* #t (/ (fly-fuel-cost ?c1 ?c2) (fly-time ?c1 ?c2)))))
+
+  (:durative-action refuel
+    :parameters (?a - aircraft ?c - city)
+    :duration   (= ?duration (- (max_fuel_level ?a) (fuel_level ?a)))
+    :condition  (over all (at ?a ?c))
+    :effect     (at end (assign (fuel_level ?a) (max_fuel_level ?a)))
   )
-  
-;  (:durative-action zoom
-;           :parameters (?a - aircraft ?c1 ?c2 - city ?n1 ?n2 ?n3 - fuel-amount)
-;           :duration (= ?duration 1)
-;           :condition (and (at start (at ?a ?c1))
-;                              (at start (fuel-level ?a ?n3))
-;                              (at start (next ?n1 ?n2))
-;                              (at start (next ?n2 ?n3)))
-;           :effect (and (at start (not (at ?a ?c1)))
-;                        (at end (at ?a ?c2))
-;                        (at start (not (fuel-level ?a ?n3)))
-;                        (at end (fuel-level ?a ?n1))
-;                        (at end (increase (total-cost) (zoom-cost ?c1 ?c2))))
-;  )
-;  
-;  (:durative-action refuel
-;           :parameters (?a - aircraft ?c - city ?n1 ?n2 - fuel-amount)
-;           :duration (= ?duration 1)
-;           :condition (and (at start (fuel-level ?a ?n1))
-;                              (at start (next ?n1 ?n2))
-;                              (over all (at ?a ?c)))
-;           :effect (and (at start (not (fuel-level ?a ?n1)))
-;                        (at end (fuel-level ?a ?n2))
-;                        (at end (increase (total-cost) 50)))
-;  )
+
+  (:durative-action refuel_for_fly
+    :parameters (?a - aircraft ?src - city ?dst - city)
+    :duration   (= ?duration (fly_fuel_cost ?src ?dst))
+    :condition  (and  (over all (at ?a ?src))
+                      (at start (<= (fuel_level ?a) (- (max_fuel_level ?a) (fly_fuel_cost ?src ?dst)))))
+    :effect     (at end (increase (fuel_level ?a) (fly_fuel_cost ?src ?dst)))
+  )
+
+  (:durative-action refuel_for_zoom
+    :parameters (?a - aircraft ?src - city ?dst - city)
+    :duration   (= ?duration (* (fly_fuel_cost ?src ?dst) zoom_fuel_cost))
+    :condition  (and  (over all (at ?a ?src))
+                      (at end (<= (fuel_level ?a) (max_fuel_level ?a))))
+    :effect     (at end (increase (fuel_level ?a) (* (fly_fuel_cost ?src ?dst) zoom_fuel_cost)))
+  )
+
+  (:durative-action fly_small
+    :parameters (?a - small_aircraft ?src - city ?dst - city)
+    :duration   (= ?duration (fly_time ?src ?dst))
+    :condition  (and  
+                      (at start (>= (fuel_level ?a) (fly_fuel_cost ?src ?dst)))
+                      (at start (at ?a ?src)))
+    :effect     (and  (at start (not (at ?a ?src)))
+                      (at end (at ?a ?dst))
+                      (at end (decrease (fuel_level ?a) (fly_fuel_cost ?src ?dst)))
+                      (at end (increase fuel_cost (fly_fuel_cost ?src ?dst))))
+  )
+
+  (:durative-action zoom_small
+    :parameters (?a - small_aircraft ?src - city ?dst - city)
+    :duration   (= ?duration (/ (fly_time ?src ?dst) zoom_time_factor))
+    :condition  (and  
+                      (at start (>= (fuel_level ?a) (* (fly_fuel_cost ?src ?dst) zoom_fuel_factor)))
+                      (at start (at ?a ?src)))
+    :effect     (and  (at start (not (at ?a ?src)))
+                      (at end (at ?a ?dst))
+                      (at end (decrease (fuel_level ?a) (* (fly_fuel_cost ?src ?dst) zoom_fuel_factor)))
+                      (at end (increase fuel_cost (* (fly_fuel_cost ?src ?dst) zoom_fuel_factor))))
+  )
+
+  (:durative-action fly_large
+    :parameters (?a - large_aircraft ?src - large_city ?dst - large_city)
+    :duration   (= ?duration (fly_time ?src ?dst))
+    :condition  (and  
+                      (at start (>= (fuel_level ?a) (fly_fuel_cost ?src ?dst)))
+                      (at start (at ?a ?src)))
+    :effect     (and  (at start (not (at ?a ?src)))
+                      (at end (at ?a ?dst))
+                      (at end (decrease (fuel_level ?a) (fly_fuel_cost ?src ?dst)))
+                      (at end (increase fuel_cost (fly_fuel_cost ?src ?dst))))
+  )
+
+  (:durative-action zoom_large
+    :parameters (?a - large_aircraft ?src - large_city ?dst - large_city)
+    :duration   (= ?duration (/ (fly_time ?src ?dst) zoom_time_factor))
+    :condition  (and  
+                      (at start (>= (fuel_level ?a) (* (fly_fuel_cost ?src ?dst) zoom_fuel_factor)))
+                      (at start (at ?a ?src)))
+    :effect     (and  (at start (not (at ?a ?src)))
+                      (at end (at ?a ?dst))
+                      (at end (decrease (fuel_level ?a) (* (fly_fuel_cost ?src ?dst) zoom_fuel_factor)))
+                      (at end (increase fuel_cost (* (fly_fuel_cost ?src ?dst) zoom_fuel_factor))))
+  )
 )

@@ -3,7 +3,8 @@
 problem=$1
 coalition=$2
 services=$3
-output=$4
+domain_link=$4
+output=$5
 
 rm -rf $output
 mkdir -p $output
@@ -28,3 +29,4 @@ echo ")" >> $output/problem_empty.pddl
 
 cp $problem/task*p* $output
 cp $coalition/$services/task*a* $output
+ln -s $domain_link $output/domain.pddl

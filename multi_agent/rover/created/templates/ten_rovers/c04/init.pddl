@@ -48,3 +48,4 @@
   (supports camera6 colour)
 
   (equipped_for_rock_analysis rover9)
+  (equipped_for_soil_analysis rover9)
